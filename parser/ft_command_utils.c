@@ -6,7 +6,7 @@
 /*   By: rmarzouk <rmarzouk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 10:40:06 by rmarzouk          #+#    #+#             */
-/*   Updated: 2024/07/22 15:20:53 by rmarzouk         ###   ########.fr       */
+/*   Updated: 2024/07/26 09:49:13 by rmarzouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ char	**set_cmd_arr(t_cmd_limits *cmd) //cmd array aka command and its options
 	return (cmd_array);
 }
 
-int	check_redir(t_cmd_limits *cmd, int type_1, int type_2) //nbr of type
+int	check_redir(t_cmd_limits *cmd) //nbr of type
 {
 	t_item	*tmp;
 	int		i;
@@ -75,14 +75,14 @@ int	check_redir(t_cmd_limits *cmd, int type_1, int type_2) //nbr of type
 	tmp = cmd->start;
 	while (tmp != cmd->end->next) //must check last limit aka end not end->next
 	{
-		if (tmp->type == type_1 || tmp->type == type_2)
+		if (tmp->type == REDIR_IN || tmp->type == HERE_DOC
+			|| tmp->type == REDIR_OUT || tmp->type == DREDIR_OUT)
 			i++;
 		tmp = tmp->next;
 	}
 	return (i);
 }
-
-t_redir	*set_redir(t_cmd_limits *cmd, int type1, int type2, int num)
+t_redir	*set_redirs(t_cmd_limits *cmd, int num)
 {
 	t_item	*tmp;
 	t_redir	*redir;
@@ -95,18 +95,15 @@ t_redir	*set_redir(t_cmd_limits *cmd, int type1, int type2, int num)
 		return (NULL);
 	while (tmp != cmd->end->next)
 	{
-		if (tmp->type == type1)
+		if (tmp->type == REDIR_IN_FILE || tmp->type == REDIR_OUT_FILE
+			|| tmp->type == DREDIR_OUT_FILE || tmp->type == HERE_DOC_LIMITER)
 		{
-			redir[i].type = 1; //< or >
-			redir[i++].path_or_limiter = ft_strdup(tmp->content);
-		}
-		else if (tmp->type == type2) // heredoc or dredir_out
-		{
-			redir[i].type = 2; // << or >>
+			redir[i].type = tmp->type;
 			redir[i++].path_or_limiter = ft_strdup(tmp->content);
 		}
 		tmp = tmp->next;
 	}
+	// printf("number of redirs filled = %d\n", i);
 	return (redir);
 }
 

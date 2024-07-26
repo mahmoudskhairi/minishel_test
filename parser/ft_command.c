@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_command.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mskhairi <mskhairi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rmarzouk <rmarzouk@student.1337.ma>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/11 11:45:52 by rmarzouk          #+#    #+#             */
-/*   Updated: 2024/07/25 13:09:48 by mskhairi         ###   ########.fr       */
+/*   Updated: 2024/07/26 18:51:23 by rmarzouk         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,19 +24,13 @@ t_simple_cmd	*new_cmd_node(t_cmd_limits *cmd)
 	new->cmd_name = ft_strdup(new->cmd[0]); // cmd_name is first element
 	new->next = NULL;
 	new->prev = NULL;
-	new->in_num = check_redir(cmd, REDIR_IN,
-			HERE_DOC); // number of redir in
-	new->out_num = check_redir(cmd, REDIR_OUT,
-			DREDIR_OUT); // number of redir out
 	new->pipe_flag = 0;// how to check pipe flag ?? will set it later
-	new->fd.in = -1;// execution part
-	new->fd.out = -1;// execution part
+	new->fd.in = 0;// execution part
+	new->fd.out = 1;// execution part
 	new->pipe[0] = -1;// execution part
 	new->pipe[1] = -1;// execution part
-	new->redir_in = set_redir(cmd, REDIR_IN_FILE, HERE_DOC_LIMITER,
-			new->in_num); // fill array with in redir
-	new->redir_out = set_redir(cmd, REDIR_OUT_FILE, DREDIR_OUT_FILE,
-			new->out_num); // fill array with out redir
+	new->redir_num = check_redir(cmd);
+	new->redirs = set_redirs(cmd, new->redir_num);
 	return (new);
 }
 
@@ -73,6 +67,7 @@ void	add_back_simple_cmd(t_simple_cmd **lst, t_simple_cmd *new)
 		{
 			last = last_cmd(*lst);
 			last->next = new;
+			new->prev = last;
 		}
 		else
 			*lst = new;

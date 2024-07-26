@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rmarzouk <rmarzouk@student.1337.ma>        +#+  +:+       +#+        */
+/*   By: mskhairi <mskhairi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:34:55 by mskhairi          #+#    #+#             */
-/*   Updated: 2024/07/23 13:12:07 by rmarzouk         ###   ########.fr       */
+/*   Updated: 2024/07/26 19:21:19 by mskhairi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,10 @@
 # include <readline/history.h>
 # include <signal.h>
 # include <stdio.h>
-# include <stdlib.h>
-# include <unistd.h>
+# include <stdlib.h>		
+# include <unistd.h>	
+# include <stdbool.h>
+# include <fcntl.h>
 
 /*---------------------------[ enum ]------------------------------*/
 
@@ -98,11 +100,9 @@ typedef struct s_simple_cmd
 	int					i;// index of command;
 	char				*cmd_name;// command name
 	char				**cmd;//command with its falags and options
-	int					in_num;// number of redir
-	int					out_num;// number of redir out
+	int					redir_num;// number of redir
 	// we must check pipe flag befor assignment of in_out fd
-	t_redir				*redir_in;//in
-	t_redir				*redir_out;//out
+	t_redir				*redirs;// redirs pointer
 	t_fd				fd;//fd of in and out fd.in=open(redir_in->path);
 	int					pipe[2];// pipe if needed
 	int					pipe_flag;
@@ -115,6 +115,7 @@ typedef struct s_env // this is for env variables
 {
 	char			*key;
 	char			*value;
+	bool			value_falg;
 	struct s_env	*next;
 	struct s_env	*prev;
 }					t_env;
@@ -136,7 +137,7 @@ typedef struct s_data
 
 int						handle_prompt(t_data *data);
 t_item					*lexer(char *input);
-t_item					*organizer(t_item *list);
+t_item					*organizer(t_env *env_l, t_item *list);
 t_cmd_limits			*set_cmd_limits(t_item *head);
 t_simple_cmd			*ft_cmd_list(t_cmd_limits *list);
 int						is_empty(char *str);
@@ -156,7 +157,9 @@ void					ft_clear_cmd_lst(t_simple_cmd **lst);
 
 // testing
 void					print_list(t_item *head);
-int		mini_env(t_env *env_l);
+void					print(char **str);
+int		mini_env(t_data *data);
+int		is_whitespace(char c);
 #endif
 
 //if there is pipe or not : 0 = no pipe  1 = before 2 = after 3 = befor & after
