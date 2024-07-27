@@ -6,7 +6,7 @@
 /*   By: mskhairi <mskhairi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/22 16:31:37 by rmarzouk          #+#    #+#             */
-/*   Updated: 2024/07/26 17:09:54 by mskhairi         ###   ########.fr       */
+/*   Updated: 2024/07/27 13:53:01 by mskhairi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,12 +45,14 @@ int	mini_cd(t_env *env, char **cmd)
 	{
 		if (chdir("/Users/mskhairi") == -1)
 		{
+			//exit status = 1;
 			perror("Error");
 			return (1);
 		}
 	}
     else if (chdir(cmd[1]) == -1)
     {
+		//exit status = 1;
         perror("Error");
         return (1);
     }

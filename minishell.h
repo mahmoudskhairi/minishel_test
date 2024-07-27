@@ -6,7 +6,7 @@
 /*   By: mskhairi <mskhairi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/04 18:34:55 by mskhairi          #+#    #+#             */
-/*   Updated: 2024/07/26 19:21:19 by mskhairi         ###   ########.fr       */
+/*   Updated: 2024/07/27 10:39:57 by mskhairi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include "readline/readline.h"
 # include <readline/history.h>
 # include <signal.h>
+#include <sys/wait.h>//linux
 # include <stdio.h>
 # include <stdlib.h>		
 # include <unistd.h>	
